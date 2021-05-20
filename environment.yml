@@ -1,0 +1,16 @@
+name: environment
+channels:
+    - pytorch
+    - defaults
+dependencies:
+    - python
+    - pytorch=1.7.1
+    - torchvision=0.8.2
+    - cudatoolkit=10.1
+    - tqdm
+    - tensorboard
+    - numpy
+    - scipy
+    - matplotlib
+    - seaborn
+    - scikit-learn
