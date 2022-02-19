@@ -51,7 +51,7 @@ models = {
 if __name__ == "__main__":
 
     args = training_args().parse_args()
-
+    print(args)
     print("Parsed args", args)
     print("Seed: ", args.seed)
     torch.manual_seed(args.seed)

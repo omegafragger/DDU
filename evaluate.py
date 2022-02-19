@@ -52,7 +52,7 @@ model_to_num_dim = {"resnet50": 2048, "wide_resnet": 640, "vgg16": 512}
 if __name__ == "__main__":
 
     args = eval_args().parse_args()
-
+    print(args)
     # Checking if GPU is available
     cuda = torch.cuda.is_available()
 
@@ -122,7 +122,7 @@ if __name__ == "__main__":
             saved_model_name = os.path.join(
                 args.load_loc,
                 "Run" + str(i + 1),
-                model_load_name(args.model, args.sn, args.mod, args.coeff, args.seed, i) + "_350.model",
+                model_load_name(args.model, args.sn, args.mod, args.coeff, args.seed, i) + "_1.model",
             )
             net = models[args.model](
                 spectral_normalization=args.sn, mod=args.mod, coeff=args.coeff, num_classes=num_classes, temp=1.0,
