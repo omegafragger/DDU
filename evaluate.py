@@ -16,6 +16,7 @@ import data.ood_detection.svhn as svhn
 
 # Import network models
 from net.resnet import resnet50
+from net.resnet import resnet18
 from net.wide_resnet import wrn
 from net.vgg import vgg16
 
@@ -40,14 +41,14 @@ from utils.args import eval_args
 from utils.temperature_scaling import ModelWithTemperature
 
 # Dataset params
-dataset_num_classes = {"cifar10": 10, "cifar100": 100, "svhn": 10}
+dataset_num_classes = {"cifar10": 10, "cifar100": 100, "svhn": 10, "carla": 4}
 
-dataset_loader = {"cifar10": cifar10, "cifar100": cifar100, "svhn": svhn}
+dataset_loader = {"cifar10": cifar10, "cifar100": cifar100, "svhn": svhn, "carla": carla}
 
 # Mapping model name to model function
-models = {"resnet50": resnet50, "wide_resnet": wrn, "vgg16": vgg16}
+models = {"resnet50": resnet50, "wide_resnet": wrn, "vgg16": vgg16, "resnet18": resnet18}
 
-model_to_num_dim = {"resnet50": 2048, "wide_resnet": 640, "vgg16": 512}
+model_to_num_dim = {"resnet50": 2048, "wide_resnet": 640, "vgg16": 512, "resnet18": 2048}
 
 
 if __name__ == "__main__":
@@ -74,7 +75,7 @@ if __name__ == "__main__":
     accuracies = []
 
     # Pre temperature scaling
-    # m1 - Uncertainty/Confidence Metric 1
+    # m1 - Uncertainty/confidence Metric 1
     #      for deterministic model: logsumexp, for ensemble: entropy
     # m2 - Uncertainty/Confidence Metric 2
     #      for deterministic model: entropy, for ensemble: MI

@@ -45,12 +45,14 @@ class DDUDataset(Dataset):
 	def __len__(self):
 		return len(self.all_images)
 
+
 def collate_fn(batch):
     """
     To handle the data loading as different images may have different number 
     of objects and to handle varying size tensors as well.
     """
     return tuple(zip(*batch))
+
 
 def get_train_valid_loader(batch_size=None, val_seed=None, val_size=0.1, num_workers=4, pin_memory=False, root=None, **kwargs):
     error_msg = "[!] val_size should be in the range [0, 1]."
@@ -104,17 +106,19 @@ def get_train_valid_loader(batch_size=None, val_seed=None, val_size=0.1, num_wor
 
 def get_test_loader(batch_size, num_workers=4, pin_memory=False, **kwargs):
     # normalize = transforms.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010],)
-
     # # define transform
     # transform = transforms.Compose([transforms.ToTensor(), normalize,])
-
     # data_dir = "./data"
     # dataset = datasets.CIFAR10(root=data_dir, train=False, download=True, transform=transform,)
 
-    torch_dataset = DDUDataset(data_dir_path, train_image_dir, data_label_json, 150, 150)
+	data_dir_path = "data"
+	data_label_json = "vehicle_class_dict.json"
+	train_image_dir = "cropped_images"
 
-    data_loader = torch.utils.data.DataLoader(
-        torch_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory,
-    )
+	torch_dataset = DDUDataset(data_dir_path, train_image_dir, data_label_json, 32, 32)
 
-    return data_loader
+	data_loader = torch.utils.data.DataLoader(
+	   torch_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers, pin_memory=pin_memory,
+	)
+
+	return data_loader

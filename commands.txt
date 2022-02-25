@@ -1,3 +1,7 @@
 python train.py --seed 1 --dataset cifar10 --dataset-root cifar-10-batches-py --model wide_resnet -sn -mod --coeff 3.0
 
+python train.py --seed 1 --dataset carla --dataset-root carla_root --model resnet18 -sn --coeff 3.0 (working)
+
 python evaluate.py --seed 1 --dataset cifar10 --ood_dataset svhn --load-path saved_models_wide_resnet/ --model wide_resnet --runs 1 -sn -mod --coeff 3.0 --model-type softmax
+
+python evaluate.py --seed 1 --dataset carla --ood_dataset svhn --load-path carla_train_models/ --model resnet18 --runs 1 -sn --coeff 3.0 --model-type softmax
