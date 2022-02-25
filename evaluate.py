@@ -11,6 +11,7 @@ import torch.backends.cudnn as cudnn
 # Import dataloaders
 import data.ood_detection.cifar10 as cifar10
 import data.ood_detection.cifar100 as cifar100
+import data.ood_detection.carla as carla
 import data.ood_detection.svhn as svhn
 
 # Import network models

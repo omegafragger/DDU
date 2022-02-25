@@ -11,6 +11,7 @@ import torch.backends.cudnn as cudnn
 # Import dataloaders
 import data.ood_detection.cifar10 as cifar10
 import data.ood_detection.cifar100 as cifar100
+import data.ood_detection.carla as carla
 import data.ood_detection.svhn as svhn
 import data.dirty_mnist as dirty_mnist
 
@@ -30,13 +31,14 @@ from utils.train_utils import train_single_epoch, test_single_epoch
 from torch.utils.tensorboard import SummaryWriter
 
 
-dataset_num_classes = {"cifar10": 10, "cifar100": 100, "svhn": 10, "dirty_mnist": 10}
+dataset_num_classes = {"cifar10": 10, "cifar100": 100, "svhn": 10, "dirty_mnist": 10, 'carla': 4}
 
 dataset_loader = {
     "cifar10": cifar10,
     "cifar100": cifar100,
     "svhn": svhn,
     "dirty_mnist": dirty_mnist,
+    "carla": carla
 }
 
 models = {
