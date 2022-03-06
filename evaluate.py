@@ -190,7 +190,7 @@ if __name__ == "__main__":
 
             if (args.model_type == "gmm"):
                 # Evaluate a GMM model
-                print("GMM Model")
+                print("*" * 50, "GMM Model", "*" * 50)
                 embeddings, labels = get_embeddings(
                     net,
                     train_loader,
