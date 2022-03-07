@@ -109,13 +109,35 @@ def gmm_evaluate(net, gaussians_model, loader, device, num_classes, storage_devi
             label = label.to(device)
 
             logit_B_C = gmm_forward(net, gaussians_model, data)
-
             end = start + len(data)
             logits_N_C[start:end].copy_(logit_B_C, non_blocking=True)
             labels_N[start:end].copy_(label, non_blocking=True)
             start = end
 
     return logits_N_C, labels_N
+
+
+def gmm_compute_logits(net, gaussians_model, loader, device, num_classes, storage_device):
+
+    num_samples = len(loader.dataset)
+    logits_N_C = torch.empty((num_samples, num_classes), dtype=torch.float, device=storage_device)
+    labels_N = torch.empty(num_samples, dtype=torch.int, device=storage_device)
+
+    with torch.no_grad():
+        start = 0
+        for image_data, labels_data, image_names in tqdm(loader):
+            data = [image for image in image_data]
+            data = torch.stack(data, dim=0)
+            labels = [label for label in labels_data]
+            labels = torch.tensor(labels)
+            data = data.to(device)
+            labels = labels.to(device)
+
+            logit_B_C = gmm_forward(net, gaussians_model, data)
+            end = start + len(data)
+            logits_N_C[start:end].copy_(logit_B_C, non_blocking=True)
+            start = end
+    return logits_N_C
 
 
 def gmm_get_logits(gmm, embeddings):
@@ -149,17 +171,20 @@ def gmm_fit(embeddings, labels, num_classes):
             except RuntimeError as e:
                 print("Jitter Failed:", jitter_eps)
                 # print("Exception 1:", e)
-                if "cholesky" in str(e):
-                    continue
+                # if "cholesky" in str(e):
+                #     continue
+                continue
             except ValueError as e:
                 print("Jitter Failed:", jitter_eps)
                 # print("Exception 2:", e)
-                if "The parameter covariance_matrix has invalid values" in str(e):
+                # if "The parameter covariance_matrix has invalid values" in str(e):
                     # print(e)
-                    continue
+                    # continue
+                continue
             except Exception as e:
                 print("Jitter Failed:", jitter_eps)
                 # print(e)
+                continue
             # break
-
+            break
     return gmm, jitter_eps

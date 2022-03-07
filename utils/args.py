@@ -24,7 +24,7 @@ def training_args():
     # saved_model_name = "resnet50_350.model"
     saved_model_name = "resnet18_carla.model"
     # epoch = 350
-    epoch = 1
+    epoch = 30
     first_milestone = 150  # Milestone for change in lr
     second_milestone = 250  # Milestone for change in lr
 

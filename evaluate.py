@@ -2,16 +2,19 @@
 Script to evaluate a single model. 
 """
 import os
+import sys
 import json
 import math
 import torch
 import argparse
+from collections import defaultdict
 import torch.backends.cudnn as cudnn
 
 # Import dataloaders
 import data.ood_detection.cifar10 as cifar10
 import data.ood_detection.cifar100 as cifar100
 import data.ood_detection.carla as carla
+import data.ood_detection.carla_ood as carla_ood
 import data.ood_detection.svhn as svhn
 
 # Import network models
@@ -31,7 +34,7 @@ from metrics.uncertainty_confidence import entropy, logsumexp
 from metrics.ood_metrics import get_roc_auc, get_roc_auc_logits, get_roc_auc_ensemble
 
 # Import GMM utils
-from utils.gmm_utils import get_embeddings, gmm_evaluate, gmm_fit
+from utils.gmm_utils import get_embeddings, gmm_evaluate, gmm_fit, gmm_compute_logits
 from utils.ensemble_utils import load_ensemble, ensemble_forward_pass
 from utils.eval_utils import model_load_name
 from utils.train_utils import model_save_name
@@ -41,9 +44,9 @@ from utils.args import eval_args
 from utils.temperature_scaling import ModelWithTemperature
 
 # Dataset params
-dataset_num_classes = {"cifar10": 10, "cifar100": 100, "svhn": 10, "carla": 4}
+dataset_num_classes = {"cifar10": 10, "cifar100": 100, "svhn": 10, "carla": 4, "carla_ood": 4}
 
-dataset_loader = {"cifar10": cifar10, "cifar100": cifar100, "svhn": svhn, "carla": carla}
+dataset_loader = {"cifar10": cifar10, "cifar100": cifar100, "svhn": svhn, "carla": carla, "carla_ood": carla_ood}
 
 # Mapping model name to model function
 models = {"resnet50": resnet50, "wide_resnet": wrn, "vgg16": vgg16, "resnet18": resnet18}
@@ -51,8 +54,24 @@ models = {"resnet50": resnet50, "wide_resnet": wrn, "vgg16": vgg16, "resnet18": 
 model_to_num_dim = {"resnet50": 2048, "wide_resnet": 640, "vgg16": 512, "resnet18": 512}
 
 
-if __name__ == "__main__":
+def probability_mappings(ood_logits=None, ood_test_loader=None):
+    image_prob_mappings = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+    image_index = 0
+    softmax_probs = torch.nn.Softmax(dim=0) 
+    for image_data, labels, image_names in ood_test_loader:
+        for image_datum, label, image_name in zip(image_data, labels, image_names):
+            logits_tensor = ood_logits[image_index].cpu().detach()
+            softmax_probabilities = softmax_probs(logits_tensor)
+            # image_prob_mappings[image_name][int(label)] = str(list(ood_logits[image_index].cpu().detach().numpy()))
+            image_prob_mappings[image_name][int(label)]["raw_gaussian_mixture_probs"] = str(list(logits_tensor.numpy()))
+            image_prob_mappings[image_name][int(label)]["refined_probs"] = str(list(softmax_probabilities.numpy()))
+            image_index += 1
 
+    with open('image_prob_mappings.json', 'w') as fp:
+        json.dump(image_prob_mappings, fp, indent=4)
+
+
+if __name__ == "__main__":
     args = eval_args().parse_args()
     print(args)
     # Checking if GPU is available
@@ -124,7 +143,7 @@ if __name__ == "__main__":
             saved_model_name = os.path.join(
                 args.load_loc,
                 "Run" + str(i + 1),
-                model_load_name(args.model, args.sn, args.mod, args.coeff, args.seed, i) + "_1.model",
+                model_load_name(args.model, args.sn, args.mod, args.coeff, args.seed, i) + "_30.model",
             )
             net = models[args.model](
                 spectral_normalization=args.sn, mod=args.mod, coeff=args.coeff, num_classes=num_classes, temp=1.0,
@@ -206,19 +225,26 @@ if __name__ == "__main__":
                         net, gaussians_model, test_loader, device=device, num_classes=num_classes, storage_device=device,
                     )
 
-                    ood_logits, ood_labels = gmm_evaluate(
+
+                    ood_logits = gmm_compute_logits(
                         net, gaussians_model, ood_test_loader, device=device, num_classes=num_classes, storage_device=device,
                     )
 
-                    (_, _, _), (_, _, _), m1_auroc, m1_auprc = get_roc_auc_logits(
-                        logits, ood_logits, logsumexp, device, confidence=True
-                    )
-                    (_, _, _), (_, _, _), m2_auroc, m2_auprc = get_roc_auc_logits(logits, ood_logits, entropy, device)
+                    probability_mappings(ood_logits=ood_logits, ood_test_loader=ood_test_loader)
+                    sys.exit(0)
+                    # ood_logits, ood_labels = gmm_evaluate(
+                    #     net, gaussians_model, ood_test_loader, device=device, num_classes=num_classes, storage_device=device,
+                    # )
 
-                    t_m1_auroc = m1_auroc
-                    t_m1_auprc = m1_auprc
-                    t_m2_auroc = m2_auroc
-                    t_m2_auprc = m2_auprc
+                    # (_, _, _), (_, _, _), m1_auroc, m1_auprc = get_roc_auc_logits(
+                    #     logits, ood_logits, logsumexp, device, confidence=True
+                    # )
+                    # (_, _, _), (_, _, _), m2_auroc, m2_auprc = get_roc_auc_logits(logits, ood_logits, entropy, device)
+
+                    # t_m1_auroc = m1_auroc
+                    # t_m1_auprc = m1_auprc
+                    # t_m2_auroc = m2_auroc
+                    # t_m2_auprc = m2_auprc
 
                 except RuntimeError as e:
                     print("Runtime Error caught: " + str(e))
