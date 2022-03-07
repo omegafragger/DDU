@@ -48,7 +48,7 @@ dataset_loader = {"cifar10": cifar10, "cifar100": cifar100, "svhn": svhn, "carla
 # Mapping model name to model function
 models = {"resnet50": resnet50, "wide_resnet": wrn, "vgg16": vgg16, "resnet18": resnet18}
 
-model_to_num_dim = {"resnet50": 2048, "wide_resnet": 640, "vgg16": 512, "resnet18": 2048}
+model_to_num_dim = {"resnet50": 2048, "wide_resnet": 640, "vgg16": 512, "resnet18": 512}
 
 
 if __name__ == "__main__":
