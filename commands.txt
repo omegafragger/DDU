@@ -6,4 +6,7 @@ python evaluate.py --seed 1 --dataset cifar10 --ood_dataset svhn --load-path sav
 
 python evaluate.py --seed 1 --dataset carla --ood_dataset svhn --load-path carla_train_models/ --model resnet18 --runs 1 -sn --coeff 3.0 --model-type softmax
 
-python evaluate.py --seed 1 --dataset carla --ood_dataset svhn --load-path carla_train_models/ --model resnet18 --runs 1 -sn --coeff 3.0 --model-type gmm
+python evaluate.py --seed 1 --dataset carla --ood_dataset carla_ood --load-path carla_train_models/ --model resnet18 --runs 1 -sn --coeff 3.0 --model-type gmm
+
+python evaluate.py --seed 1 --dataset carla --ood_dataset carla_inference --load-path carla_train_models/ --model resnet18 --runs 1 -sn --coeff 3.0 --model-type gmm
+

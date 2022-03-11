@@ -15,6 +15,7 @@ import data.ood_detection.cifar10 as cifar10
 import data.ood_detection.cifar100 as cifar100
 import data.ood_detection.carla as carla
 import data.ood_detection.carla_ood as carla_ood
+import data.ood_detection.carla_inference as carla_inference
 import data.ood_detection.svhn as svhn
 
 # Import network models
@@ -44,9 +45,9 @@ from utils.args import eval_args
 from utils.temperature_scaling import ModelWithTemperature
 
 # Dataset params
-dataset_num_classes = {"cifar10": 10, "cifar100": 100, "svhn": 10, "carla": 4, "carla_ood": 4}
+dataset_num_classes = {"cifar10": 10, "cifar100": 100, "svhn": 10, "carla": 4, "carla_ood": 4, "carla_inference": 4}
 
-dataset_loader = {"cifar10": cifar10, "cifar100": cifar100, "svhn": svhn, "carla": carla, "carla_ood": carla_ood}
+dataset_loader = {"cifar10": cifar10, "cifar100": cifar100, "svhn": svhn, "carla": carla, "carla_ood": carla_ood, "carla_inference": carla_inference}
 
 # Mapping model name to model function
 models = {"resnet50": resnet50, "wide_resnet": wrn, "vgg16": vgg16, "resnet18": resnet18}
@@ -54,7 +55,7 @@ models = {"resnet50": resnet50, "wide_resnet": wrn, "vgg16": vgg16, "resnet18": 
 model_to_num_dim = {"resnet50": 2048, "wide_resnet": 640, "vgg16": 512, "resnet18": 512}
 
 
-def probability_mappings(ood_logits=None, ood_test_loader=None):
+def probability_mappings(ood_logits=None, ood_test_loader=None, output_file_name='image_prob_mappings.json'):
     image_prob_mappings = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     image_index = 0
     softmax_probs = torch.nn.Softmax(dim=0) 
@@ -67,7 +68,7 @@ def probability_mappings(ood_logits=None, ood_test_loader=None):
             image_prob_mappings[image_name][int(label)]["refined_probs"] = str(list(softmax_probabilities.numpy()))
             image_index += 1
 
-    with open('image_prob_mappings.json', 'w') as fp:
+    with open(output_file_name, 'w') as fp:
         json.dump(image_prob_mappings, fp, indent=4)
 
 
@@ -88,7 +89,7 @@ if __name__ == "__main__":
 
     test_loader = dataset_loader[args.dataset].get_test_loader(batch_size=args.batch_size, pin_memory=args.gpu)
 
-    ood_test_loader = dataset_loader[args.ood_dataset].get_test_loader(batch_size=args.batch_size, pin_memory=args.gpu)
+    ood_test_loader = dataset_loader[args.ood_dataset].get_test_loader(batch_size=args.batch_size, pin_memory=args.gpu, train_image_dir="test_images")
 
     # Evaluating the models
     accuracies = []
@@ -230,7 +231,7 @@ if __name__ == "__main__":
                         net, gaussians_model, ood_test_loader, device=device, num_classes=num_classes, storage_device=device,
                     )
 
-                    probability_mappings(ood_logits=ood_logits, ood_test_loader=ood_test_loader)
+                    probability_mappings(ood_logits=ood_logits, ood_test_loader=ood_test_loader, output_file_name='test_gaussian_probabilities.json')
                     sys.exit(0)
                     # ood_logits, ood_labels = gmm_evaluate(
                     #     net, gaussians_model, ood_test_loader, device=device, num_classes=num_classes, storage_device=device,

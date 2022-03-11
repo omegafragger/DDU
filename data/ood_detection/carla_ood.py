@@ -104,7 +104,7 @@ def get_train_valid_loader(batch_size=None, val_seed=None, val_size=0.1, num_wor
     return (train_loader, valid_loader)
 
 
-def get_test_loader(batch_size, num_workers=4, pin_memory=False, **kwargs):
+def get_test_loader(batch_size, num_workers=4, pin_memory=False, train_image_dir="cropped_images", **kwargs):
     # normalize = transforms.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2023, 0.1994, 0.2010],)
     # # define transform
     # transform = transforms.Compose([transforms.ToTensor(), normalize,])
@@ -113,7 +113,6 @@ def get_test_loader(batch_size, num_workers=4, pin_memory=False, **kwargs):
 
 	data_dir_path = "data"
 	data_label_json = "vehicle_class_dict.json"
-	train_image_dir = "cropped_images"
 
 	torch_dataset = DDUDataset(data_dir_path, train_image_dir, data_label_json, 32, 32)
 

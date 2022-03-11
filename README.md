@@ -4,6 +4,8 @@ This repository contains code for computing the uncertainty of object detection 
 
 As a result, the trained Gaussian Mixture Model (GMM) will compute the uncertainty (or certainty) corresponding to each bounding box detected.
 
+I am currently pushing my changes to `feature/experiments` branch {{Please track this branch for latest commits}}. (Performed a master-merge recently).
+
 ## Commands:
 
 ```
