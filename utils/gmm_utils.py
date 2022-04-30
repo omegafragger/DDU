@@ -79,6 +79,8 @@ def get_embeddings(
             print(labels.shape)
             start = end
         print("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+    print("Embeddings Shape:", embeddings.shape)
+    print("Labels Shape:", labels.shape)
     return embeddings, labels
 
 
@@ -148,11 +150,14 @@ def gmm_get_logits(gmm, embeddings):
 
 def gmm_fit(embeddings, labels, num_classes):
     with torch.no_grad():
+        print("Embeddings Shape:", embeddings.shape, "Labels Shape:", labels.shape, "Num Classes:", num_classes)
         classwise_mean_features = torch.stack([torch.mean(embeddings[labels == c], dim=0) for c in range(num_classes)])
+        # Dim - (4 * 1024)
         print("Classwise Mean Features Shape:", classwise_mean_features.shape)
         classwise_cov_features = torch.stack(
             [centered_cov_torch(embeddings[labels == c] - classwise_mean_features[c]) for c in range(num_classes)]
         )
+        # Dim - (4 * 1024 * 1024)
         print("Classwise Covariance Matrix Shape:", classwise_cov_features.shape)
     # gmm = None
     with torch.no_grad():
