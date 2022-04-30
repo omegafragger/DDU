@@ -20,8 +20,17 @@ def train_single_epoch(
     model.train()
     train_loss = 0
     num_samples = 0
-    for batch_idx, (data, labels) in enumerate(train_loader):
+    for batch_idx, data in enumerate(train_loader):
+        image_data, labels = data
+        # for image in image_data:
+        #     print(image.shape)
+        # data = [image.to(device) for image in image_data]
+        data = [image for image in image_data]
+        data = torch.stack(data, dim=0)
         data = data.to(device)
+        # labels = [label.to(device) for label in labels]
+        labels = [label for label in labels]
+        labels = torch.tensor(labels)
         labels = labels.to(device)
 
         optimizer.zero_grad()

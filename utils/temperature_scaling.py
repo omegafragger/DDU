@@ -49,7 +49,14 @@ class ModelWithTemperature(nn.Module):
         labels_list = []
         with torch.no_grad():
             for input, label in valid_loader:
+                # print(len(input), len(input[0]), len(input[0][0]), len(input[0][0][0]))
+                input = [image for image in input]
+                input = torch.stack(input, dim=0)
                 input = input.cuda()
+
+                label = [lab for lab in label]
+                label = torch.tensor(label)
+                
                 logits = self.model(input)
                 logits_list.append(logits)
                 labels_list.append(label)
