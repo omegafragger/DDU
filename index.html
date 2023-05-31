@@ -149,39 +149,44 @@
       <div id="results-carousel" class="carousel results-carousel">
        <div class="item is-centered">
         <!-- Your image here -->
-        <img classs="image" src="static/images/figure1.png" alt="Figure 1 from the Paper"/>
+        <img src="static/images/figure1.png" alt="Figure 1 from the Paper"/>
         <h2 class="subtitle has-text-justified" style="word-break: normal; ">
           <em>
             Disentangling aleatoric and epistemic uncertainty on <span style="color: #1f77b4;">Dirty-MNIST (iD)</span> and <span style="color: #ff7f0e;">Fashion-MNIST (OoD)</span> <strong>(a)</strong> requires using <em>softmax entropy</em> <strong>(b)</strong> and <em>feature-space density (GMM)</em> <strong>(c)</strong> with a well-regularized feature space (<em>ResNet-18+SN</em> vs <em>LeNet</em> &amp; <em>VGG-16</em> without smoothness &amp; sensitivity).
           </em>
-          <p>
+          <!-- <p>
             <strong>(b):</strong>
             Softmax entropy captures aleatoric uncertainty for iD data (Dirty-MNIST), thereby separating <span style="color: #7570b3;">unambiguous MNIST samples</span> and <span style="color: #d95f02;">Ambiguous-MNIST samples</span> (stacked histogram). However, iD and OoD are confounded: softmax entropy has arbitrary values for OoD, indistinguishable from iD.
             <strong>(c):</strong>
             With a well-regularized feature space (DDU with ResNet-18+SN), iD and OoD densities do not overlap, capturing epistemic uncertainty. However, without such feature space (LeNet &amp; VGG-16), feature density suffers from <em>feature collapse</em>: iD and OoD densities overlap. Generally, feature-space density confounds unambiguous and ambiguous iD samples as their densities overlap.
-          </p>
-            
+          </p> -->
         </h2>
       </div>
       <div class="item">
         <!-- Your image here -->
         <img src="static/images/results.png" alt="OoD Detection & Active Learning Performance"/>
+        
         <h2 class="subtitle has-text-centered">
-          DDU performs on par with Deep Ensembles.
+          <em>OoD Detection & Active Learning Performance.</em>DDU performs on par with Deep Ensembles.
         </h2>
       </div>
       <div class="item">
         <!-- Your image here -->
-        <img src="static/images/carousel3.jpg" alt="MY ALT TEXT"/>
+        <img src="static/images/semantic_segmentation_results.png" alt="Semantic Segmentation Performance"/>
         <h2 class="subtitle has-text-centered">
-         Third image description.
+          <em>Semantic Segmentation Performance.</em> DDU performs on par with Deep Ensembles.
        </h2>
      </div>
      <div class="item">
       <!-- Your image here -->
-      <img src="static/images/carousel4.jpg" alt="MY ALT TEXT"/>
+      <div>
+        <img src="static/images/5-ensemble.png" alt="5-Ensemble"/>
+      </div>
+      <div>
+        <img src="static/images/objective_mismatch.png" alt="Objective Mismatch"/>
+      </div>
       <h2 class="subtitle has-text-centered">
-        Fourth image description.
+        ... and many insights in the paper.
       </h2>
     </div>
   </div>
@@ -233,51 +238,13 @@
 <!-- End youtube video -->
 
 
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <video poster="" id="video1" autoplay controls muted loop height="100%">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel1.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <video poster="" id="video2" autoplay controls muted loop height="100%">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel2.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <video poster="" id="video3" autoplay controls muted loop height="100%">\
-            <!-- Your video file here -->
-            <source src="static/videos/carousel3.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End video carousel -->
-
-
-
-
-
-
 <!-- Paper poster -->
 <section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container">
       <h2 class="title">Poster</h2>
 
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
+      <iframe  src="static/pdfs/ddu_poster.pdf" width="100%" height="550">
           </iframe>
         
       </div>
@@ -290,7 +257,14 @@
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>BibTex Code Here</code></pre>
+      <pre><code>@InProceedings{Mukhoti_2023_CVPR,
+        author    = {Mukhoti, Jishnu and Kirsch, Andreas and van Amersfoort, Joost and Torr, Philip H.S. and Gal, Yarin},
+        title     = {Deep Deterministic Uncertainty: A New Simple Baseline},
+        booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+        month     = {June},
+        year      = {2023},
+        pages     = {24384-24394}
+    }</code></pre>
     </div>
 </section>
 <!--End BibTex citation -->
