@@ -43,6 +43,16 @@
   <script src="static/js/bulma-carousel.min.js"></script>
   <script src="static/js/bulma-slider.min.js"></script>
   <script src="static/js/index.js"></script>
+
+  <style>
+    body {
+      text-justify: inter-word;
+      -ms-hyphens: auto;
+      -moz-hyphens: auto;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+  </style>
 </head>
 <body>
 
@@ -131,58 +141,33 @@
   </section>
 
 
-  <!-- Teaser video-->
-  <section class="hero teaser">
-    <div class="container is-max-desktop">
-      <div class="hero-body">
-        <video poster="" id="tree" autoplay controls muted loop height="100%">
-          <!-- Your video here -->
-          <source src="static/videos/banner_video.mp4"
-          type="video/mp4">
-        </video>
-        <h2 class="subtitle has-text-centered">
-          Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
-        </h2>
-      </div>
-    </div>
-  </section>
-  <!-- End teaser video -->
-
-  <!-- Paper abstract -->
-  <section class="section hero is-light">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered has-text-centered">
-        <div class="column is-four-fifths">
-          <h2 class="title is-3">Abstract</h2>
-          <div class="content is-medium has-text-justified has-text-weight-semibold">
-            <p>
-              Reliable uncertainty from deterministic single-forward pass models is sought after because conventional methods of uncertainty quantification are computationally expensive. We take two complex single-forward-pass uncertainty approaches, DUQ and SNGP, and examine whether they mainly rely on a well-regularized feature space. Crucially, without using their more complex methods for estimating uncertainty, we find that a single softmax neural net with such a regularized feature-space, achieved via residual connections and spectral normalization, outperforms DUQ and SNGP's epistemic uncertainty predictions using simple Gaussian Discriminant Analysis post-training as a separate feature-space density estimator---without fine-tuning on OoD data, feature ensembling, or input pre-procressing. Our conceptually simple Deep Deterministic Uncertainty (DDU) baseline can also be used to disentangle aleatoric and epistemic uncertainty and performs as well as Deep Ensembles, the state-of-the art for uncertainty prediction, on several OoD benchmarks (CIFAR-10/100 vs. SVHN/Tiny-ImageNet, ImageNet vs ImageNet-O), active learning settings across different model architectures, as well as in large scale vision tasks like semantic segmentation, while being computationally cheaper.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  <!-- End paper abstract -->
-
 
 <!-- Image carousel -->
-<section class="hero is-small">
+<section class="hero">
   <div class="hero-body">
-    <div class="container">
+    <div class="container is-max-desktop">
       <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
+       <div class="item is-centered">
         <!-- Your image here -->
-        <img src="static/images/carousel1.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          First image description.
+        <img classs="image" src="static/images/figure1.png" alt="Figure 1 from the Paper"/>
+        <h2 class="subtitle has-text-justified" style="word-break: normal; ">
+          <em>
+            Disentangling aleatoric and epistemic uncertainty on <span style="color: #1f77b4;">Dirty-MNIST (iD)</span> and <span style="color: #ff7f0e;">Fashion-MNIST (OoD)</span> <strong>(a)</strong> requires using <em>softmax entropy</em> <strong>(b)</strong> and <em>feature-space density (GMM)</em> <strong>(c)</strong> with a well-regularized feature space (<em>ResNet-18+SN</em> vs <em>LeNet</em> &amp; <em>VGG-16</em> without smoothness &amp; sensitivity).
+          </em>
+          <p>
+            <strong>(b):</strong>
+            Softmax entropy captures aleatoric uncertainty for iD data (Dirty-MNIST), thereby separating <span style="color: #7570b3;">unambiguous MNIST samples</span> and <span style="color: #d95f02;">Ambiguous-MNIST samples</span> (stacked histogram). However, iD and OoD are confounded: softmax entropy has arbitrary values for OoD, indistinguishable from iD.
+            <strong>(c):</strong>
+            With a well-regularized feature space (DDU with ResNet-18+SN), iD and OoD densities do not overlap, capturing epistemic uncertainty. However, without such feature space (LeNet &amp; VGG-16), feature density suffers from <em>feature collapse</em>: iD and OoD densities overlap. Generally, feature-space density confounds unambiguous and ambiguous iD samples as their densities overlap.
+          </p>
+            
         </h2>
       </div>
       <div class="item">
         <!-- Your image here -->
-        <img src="static/images/carousel2.jpg" alt="MY ALT TEXT"/>
+        <img src="static/images/results.png" alt="OoD Detection & Active Learning Performance"/>
         <h2 class="subtitle has-text-centered">
-          Second image description.
+          DDU performs on par with Deep Ensembles.
         </h2>
       </div>
       <div class="item">
@@ -204,6 +189,25 @@
 </div>
 </section>
 <!-- End image carousel -->
+
+
+  <!-- Paper abstract -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content is-medium has-text-justified has-text-weight-semibold">
+            <p>
+              Reliable uncertainty from deterministic single-forward pass models is sought after because conventional methods of uncertainty quantification are computationally expensive. We take two complex single-forward-pass uncertainty approaches, DUQ and SNGP, and examine whether they mainly rely on a well-regularized feature space. Crucially, without using their more complex methods for estimating uncertainty, we find that a single softmax neural net with such a regularized feature-space, achieved via residual connections and spectral normalization, outperforms DUQ and SNGP's epistemic uncertainty predictions using simple Gaussian Discriminant Analysis post-training as a separate feature-space density estimator---without fine-tuning on OoD data, feature ensembling, or input pre-procressing. Our conceptually simple Deep Deterministic Uncertainty (DDU) baseline can also be used to disentangle aleatoric and epistemic uncertainty and performs as well as Deep Ensembles, the state-of-the art for uncertainty prediction, on several OoD benchmarks (CIFAR-10/100 vs. SVHN/Tiny-ImageNet, ImageNet vs ImageNet-O), active learning settings across different model architectures, as well as in large scale vision tasks like semantic segmentation, while being computationally cheaper.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End paper abstract -->
+
 
 
 
